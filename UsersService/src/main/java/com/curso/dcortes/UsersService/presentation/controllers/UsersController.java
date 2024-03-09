@@ -4,6 +4,7 @@ import com.curso.dcortes.UsersService.domain.entities.IdentificationType;
 import com.curso.dcortes.UsersService.domain.entities.User;
 import com.curso.dcortes.UsersService.usecases.UsersUseCaseService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,19 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     private final UsersUseCaseService usersService;
+
+    private RabbitTemplate rabbitTemplate;
+
     @Autowired
-    public UsersController(UsersUseCaseService usersService) {
+    public UsersController(UsersUseCaseService usersService, RabbitTemplate rabbitTemplate) {
         this.usersService = usersService;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = usersService.saveUserEntity(user);
+        rabbitTemplate.convertAndSend("users", "register", createdUser.id());
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
