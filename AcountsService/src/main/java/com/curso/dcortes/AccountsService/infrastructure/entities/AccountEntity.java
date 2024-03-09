@@ -1,4 +1,4 @@
-package com.curso.dcortes.AcountsService.infrastructure.entities;
+package com.curso.dcortes.AccountsService.infrastructure.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

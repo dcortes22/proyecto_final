@@ -1,4 +1,4 @@
-package com.curso.dcortes.AcountsService;
+package com.curso.dcortes.AccountsService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
 @EntityScan("com.curso.dcortes.AccountsService.infrastructure.entities")
-public class AcountsServiceApplication {
+public class AccountsServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AcountsServiceApplication.class, args);
+		SpringApplication.run(AccountsServiceApplication.class, args);
 	}
 
 }
