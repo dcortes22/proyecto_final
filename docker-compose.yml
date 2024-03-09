@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db:
+  db_users:
     image: arm64v8/mysql:oracle
     environment:
       MYSQL_DATABASE: users
@@ -11,3 +11,19 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
+    networks:
+      - users_network
+  users:
+    build:
+      context: ./UsersService
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db_users
+    networks:
+      - users_network
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db_users:3306/users
+networks:
+  users_network:
+    driver: bridge
