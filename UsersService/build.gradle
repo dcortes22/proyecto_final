@@ -28,7 +28,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'mysql:mysql-connector-java:8.0.33'
+	testImplementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	testImplementation 'io.jsonwebtoken:jjwt:0.9.1'
+	testImplementation 'javax.xml.bind:jaxb-api:2.3.1'
+	testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
