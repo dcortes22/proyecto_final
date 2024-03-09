@@ -26,6 +26,16 @@ services:
       - ./mysql_data_accounts:/var/lib/mysql
     networks:
       - users_network
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitUser"
+      RABBITMQ_DEFAULT_PASS: "password"
+    networks:
+      - users_network
   users:
     build:
       context: ./UsersService
@@ -36,7 +46,26 @@ services:
     networks:
       - users_network
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db_users:3306/users
+      SPRING_DATASOURCE_URL: jdbc:mysql://db_users:3306/users
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_PORT: "5672"
+      SPRING_RABBITMQ_USERNAME: "rabbitUser"
+      SPRING_RABBITMQ_PASSWORD: "password"
+  accounts:
+    build:
+      context: ./UsersService
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db_accounts
+    networks:
+      - users_network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db_accounts:3306/accounts
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_PORT: "5672"
+      SPRING_RABBITMQ_USERNAME: "rabbitUser"
+      SPRING_RABBITMQ_PASSWORD: "password"
 networks:
   users_network:
     driver: bridge
