@@ -140,4 +140,5 @@ replay_pid*
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij
 
 mysql_data
+mysql_data_accounts
 /.DS_Store
