@@ -79,4 +79,8 @@ public class UsersUseCaseService {
         List<String> rolesNames = new ArrayList<>();
         return jwtUtilities.generateToken(loadedUser.userName(), rolesNames);
     }
+
+    public Boolean validateToken(String token) {
+        return jwtUtilities.validateToken(token);
+    }
 }
