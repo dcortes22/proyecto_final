@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountUseCaseService {
@@ -24,6 +26,12 @@ public class AccountUseCaseService {
     public AccountUseCaseService(AccountEntityRepository accountEntityRepository) {
         this.accountEntityRepository = accountEntityRepository;
         this.mapper = new AccountMapperImpl();
+    }
+
+    public List<Account> getAccountEntity(Long userId) {
+        return accountEntityRepository.findByUserId(userId).stream()
+                .map(mapper::mapToDomain)
+                .collect(Collectors.toList());
     }
 
     public Account saveAccountEntity(Long userId) {

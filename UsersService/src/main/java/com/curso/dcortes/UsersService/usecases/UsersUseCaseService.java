@@ -1,5 +1,6 @@
 package com.curso.dcortes.UsersService.usecases;
 
+import com.curso.dcortes.UsersService.domain.entities.AccountRequestBody;
 import com.curso.dcortes.UsersService.domain.entities.User;
 import com.curso.dcortes.UsersService.infrastructure.config.JwtUtilities;
 import com.curso.dcortes.UsersService.infrastructure.entities.UserEntity;
@@ -14,6 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +35,16 @@ public class UsersUseCaseService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final WebClient.Builder webClientBuilder;
+
     @Autowired
-    public UsersUseCaseService(UserEntityRepository repository, AuthenticationManager authenticationManager, JwtUtilities jwtUtilities, PasswordEncoder passwordEncoder) {
+    public UsersUseCaseService(UserEntityRepository repository, AuthenticationManager authenticationManager, JwtUtilities jwtUtilities, PasswordEncoder passwordEncoder, WebClient.Builder webClientBuilder) {
         this.repository = repository;
         this.mapper = new UserMapperImpl();
         this.authenticationManager = authenticationManager;
         this.jwtUtilities = jwtUtilities;
         this.passwordEncoder = passwordEncoder;
+        this.webClientBuilder = webClientBuilder;
     }
 
     public User saveUserEntity(User entity) {
@@ -82,5 +89,15 @@ public class UsersUseCaseService {
 
     public Boolean validateToken(String token) {
         return jwtUtilities.validateToken(token);
+    }
+
+    public Mono<Object> getAccount(Long id) {
+        String url = "http://172.16.238.10:8081/api/users/accounts/" + id;
+
+        return webClientBuilder.build()
+                .get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(Object.class);
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
@@ -41,6 +44,23 @@ public class UsersController {
         return usersService.getUserEntityById(userName)
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/accounts/{userName}")
+    public ResponseEntity<Object> getAccount(@PathVariable String userName) {
+        Optional<User> optionalUser = usersService.getUserEntityById(userName);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return usersService.getAccount(user.id())
+                    .map(response -> {
+                        System.out.println(response);
+                        return ResponseEntity.ok().body(response);
+                    })
+                    .defaultIfEmpty(ResponseEntity.notFound().build())
+                    .block();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/validateToken")

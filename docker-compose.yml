@@ -8,7 +8,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - ./mysql_data:/var/lib/mysql
     networks:
@@ -21,7 +21,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - "3307:3306"
+      - 3307:3306
     volumes:
       - ./mysql_data_accounts:/var/lib/mysql
     networks:
@@ -29,8 +29,8 @@ services:
   rabbitmq:
     image: "rabbitmq:3-management"
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 5672:5672
+      - 15672:15672
     environment:
       RABBITMQ_DEFAULT_USER: "rabbitUser"
       RABBITMQ_DEFAULT_PASS: "password"
@@ -40,9 +40,10 @@ services:
     build:
       context: ./UsersService
     ports:
-      - "8080:8080"
+      - 8080:8080
     depends_on:
       - db_users
+      - rabbitmq
     networks:
       - users_network
     environment:
@@ -53,11 +54,12 @@ services:
       SPRING_RABBITMQ_PASSWORD: "password"
   accounts:
     build:
-      context: ./UsersService
+      context: ./AccountsService
     ports:
-      - "8081:8080"
+      - 8081:8080
     depends_on:
       - db_accounts
+      - rabbitmq
     networks:
       - users_network
     environment:
